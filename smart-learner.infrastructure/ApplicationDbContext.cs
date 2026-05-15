@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Smart_learner.Domain;
 using Smart_learner.Domain.Enums;
+using System.Text.Json;
 
 namespace smart_learner.infrastructure
 {
@@ -33,13 +35,25 @@ namespace smart_learner.infrastructure
                 entity.Property(e => e.FullName).IsRequired().HasMaxLength(100);
             });
 
+            modelBuilder.Entity<StudentProfile>(entity =>
+            {
+                entity.ToTable("studentProfile");
 
-            modelBuilder.Entity<StudentProfile>()
-                .OwnsOne(s => s.StudentFavourite, builder =>
-                {
-                    builder.Property(f => f.StudentId).IsRequired();
-                    builder.Property(f => f.TeacherId).IsRequired();
-                });
+                entity.HasKey(x => x.Id);
+
+                entity.Property(x => x.Id)
+                      .HasColumnName("id");
+
+                var converter = new ValueConverter<StudentFavourite, string>(
+                    v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                    v => JsonSerializer.Deserialize<StudentFavourite>(v, (JsonSerializerOptions)null)!
+                );
+
+                entity.Property(x => x.StudentFavourite)
+                      .HasColumnName("studentFavourite")
+                      .HasColumnType("jsonb")
+                      .HasConversion(converter);
+            });
 
             modelBuilder.Entity<Teacher>().HasData(
                 new Teacher

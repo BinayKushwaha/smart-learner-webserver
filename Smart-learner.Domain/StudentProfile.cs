@@ -4,11 +4,11 @@
     {
         public int Id { get; set; }
         public StudentFavourite StudentFavourite { get; set; }
-}
+    }
 
     public class StudentFavourite
     {
         public int StudentId { get; set; }
-            public  int TeacherId { get; set; }
+        public int TeacherId { get; set; }
     }
 }
