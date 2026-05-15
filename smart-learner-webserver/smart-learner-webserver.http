@@ -1,0 +1,6 @@
+@smart_learner_webserver_HostAddress = http://localhost:5005
+
+GET {{smart_learner_webserver_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

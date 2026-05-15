@@ -1,0 +1,57 @@
+﻿version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    container_name: smart-learner-db
+    environment:
+      POSTGRES_DB: smart-learner-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Kush@123
+    ports:
+      - "5432:5432"
+    networks:
+      - smart-learner-net
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: ..
+      dockerfile: smart-learner-webserver/Dockerfile
+    container_name: smart-learner-web
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=smart-learner-db;Username=postgres;Password=Kush@123
+    ports:
+      - "5000:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - smart-learner-net
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: smart-learner-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - smart-learner-net
+
+networks:
+  smart-learner-net:
+
+volumes:
+  db_data:
