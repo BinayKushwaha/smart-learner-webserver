@@ -19,19 +19,19 @@ namespace smart_learner_webserver.Controllers
             _studentService = studentService;
         }
 
-        [HttpGet("students", Name = "GetStudents")]
+        [HttpGet("students")]
         public async Task<IEnumerable<StudentDto>> Get()
         {
             return await _studentService.GetStudents();
         }
 
-        [HttpGet("profiles", Name = "GetStudentProfiles")]
+        [HttpGet("profiles")]
         public async Task<IEnumerable<StudentProfileDto>> GetProfile()
         {
             return await _studentService.GetStudentProfile();
         }
 
-        [HttpPost(Name = "CreateStudentProfile")]
+        [HttpPost("CreateStudentProfile")]
         public async Task<StudentProfileDto> CreateProfile(StudentProfileDto studentProfileDto)
         {
             return await _studentService.CreateStudentProfile(studentProfileDto);

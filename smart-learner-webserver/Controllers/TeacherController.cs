@@ -19,7 +19,7 @@ namespace smart_learner_webserver.Controllers
             _teacherService = teacherService;
         }
 
-        [HttpGet(Name = "GetTeachers")]
+        [HttpGet("Teachers")]
         public async Task<IEnumerable<TeacherDto>> Get() 
         {
             return await _teacherService.GetTeachers();
